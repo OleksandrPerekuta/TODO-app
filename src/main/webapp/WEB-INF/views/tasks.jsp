@@ -36,12 +36,14 @@
   <c:forEach var="entry" items="${tasksByLabel}">
     <div class="column" id="${entry.key}">
       <h2>${entry.key}</h2>
-      <c:forEach var="task" items="${entry.value}">
-        <div class="task" data-id="${task.id}">
-          <h3>${task.name}</h3>
-          <p>${task.description}</p>
-        </div>
-      </c:forEach>
+      <div class="tasks">
+        <c:forEach var="task" items="${entry.value}">
+          <div class="task" data-id="${task.id}">
+            <h3>${task.name}</h3>
+            <p>${task.description}</p>
+          </div>
+        </c:forEach>
+      </div>
     </div>
   </c:forEach>
 </div>
@@ -50,15 +52,16 @@
     const columns = document.querySelectorAll('.column');
 
     columns.forEach(column => {
-      new Sortable(column, {
+      new Sortable(column.querySelector('.tasks'), {
         group: 'tasks',
         animation: 150,
+        handle: '.task',
         onEnd: function (evt) {
           let taskId = evt.item.getAttribute('data-id');
-          let newLabel = evt.to.getAttribute('id');
-          let newPosition = Array.from(evt.to.children).indexOf(evt.item)-1;
-          let body = 'id='+taskId+'&label='+newLabel+'&position='+newPosition
-          fetch('http://localhost:8080/?'+body, {
+          let newLabel = evt.to.closest('.column').getAttribute('id');
+          let newPosition = Array.from(evt.to.children).indexOf(evt.item);
+          let body = 'id=' + taskId + '&label=' + newLabel + '&position=' + newPosition;
+          fetch('http://localhost:8080/?' + body, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
