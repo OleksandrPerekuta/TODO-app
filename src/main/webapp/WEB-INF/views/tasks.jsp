@@ -5,6 +5,12 @@
 <head>
   <title>Task Board</title>
   <style>
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 60px;
+    }
     .board {
       display: flex;
       justify-content: space-between;
@@ -27,11 +33,28 @@
     .column h2 {
       text-align: center;
     }
+    .addButton {
+      background-color: blue;
+      color: white;
+      border: none;
+      padding: 20px 40px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 24px;
+      margin-right: 40px;
+    }
+    body {
+      margin-top: 20px;
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 </head>
 <body>
-<h1>Task Board</h1>
+<div class="header">
+  <h1>Task Board</h1>
+  <button class="addButton">Add+</button>
+</div>
+
 <div class="board">
   <c:forEach var="entry" items="${tasksByLabel}">
     <div class="column" id="${entry.key}">
