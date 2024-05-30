@@ -1,0 +1,39 @@
+
+ˆ
+java:S1192"FDefine a constant instead of duplicating this literal "label" 5 times.(–¯»P8‘–²ü1J$ec5f1037-9acd-406a-b623-5462f986b5dd
+”
+java:S1192u"LDefine a constant instead of duplicating this literal "newPosition" 3 times.(ÖŠ«ƒşÿÿÿÿ8õ¡‡Äü1J$0964c526-b96c-4c2c-9e60-b22db7b529c3
+‰
+java:S1989!"AHandle the "ServletException" thrown here in a "try/catch" block.(ŞÕ‡øÿÿÿÿ8º–²ü1J$4af78e97-7a2f-463f-986b-85b878bc0371
+©
+java:S1989&"aHandle the following exceptions that could be thrown by "forward": ServletException, IOException.(•ËÙ—şÿÿÿÿ8»–²ü1J$b0e5bfff-15c0-44cf-b5dc-cac00d1e1f58
+‰
+java:S19890"AHandle the "ServletException" thrown here in a "try/catch" block.(ÜóÊÿÿÿÿÿ8ÒŞ¡Ãü1J$95760263-ef82-4440-8297-bb022a2b1ba6
+‰
+java:S19893"AHandle the "ServletException" thrown here in a "try/catch" block.(Ä·ëüÿÿÿÿ8ÓŞ¡Ãü1J$1b596712-26e5-44cb-b8ee-820ba44dbf49
+{
+java:S1874;"3Remove this use of "createQuery"; it is deprecated.(¢›ÿúÿÿÿÿ8Å–²ü1J$3630815b-d392-49ad-aecb-39eb6851fb19
+|
+java:S1481;"4Remove this unused "updatedEntities" local variable.(¢›ÿúÿÿÿÿ8ØŞ¡Ãü1J$74fd1dad-529c-43bd-88b5-3b4a52427416
+t
+java:S1874@",Remove this use of "save"; it is deprecated.(–ØûÖúÿÿÿÿ8ÚŞ¡Ãü1J$24740654-0342-4bc7-8d1c-d44ead5e1ec8
+˜
+java:S1989H"PHandle the following exception that could be thrown by "getWriter": IOException.(ùŠˆöúÿÿÿÿ8ÛŞ¡Ãü1J$7dc4a4bb-9ef1-4f72-a926-04de822fa772
+˜
+java:S1989L"PHandle the following exception that could be thrown by "getWriter": IOException.(«¼°øÿÿÿÿ8ÜŞ¡Ãü1J$b1cf2a9c-d08c-4763-a74e-314193450b2c
+‰
+java:S1989_"AHandle the "ServletException" thrown here in a "try/catch" block.(¢­äûüÿÿÿÿ8ÿ¢‡Äü1J$d1c18fe4-7045-4856-a947-660ddba83e44
+
+java:S1989b"ZHandle the following exception that could be thrown by "parseLong": NumberFormatException.(›ùØÑ8ÿ¢‡Äü1J$97e58107-eca6-4024-a8f4-396b8adcded3
+¢
+java:S1989c"ZHandle the following exception that could be thrown by "parseLong": NumberFormatException.(Û¸®Æùÿÿÿÿ8€£‡Äü1J$8d434968-2257-4cb3-b5d3-921cabd1ff14
+{
+java:S1874j"3Remove this use of "createQuery"; it is deprecated.(ı¼«ßûÿÿÿÿ8„£‡Äü1J$81ad5dab-7c9f-48bd-a4d9-92946595f709
+{
+java:S1874s"3Remove this use of "createQuery"; it is deprecated.(¹ƒã¿ûÿÿÿÿ8–£‡Äü1J$2f238d76-5bbe-49b6-8bd5-8b430d725aef
+{
+java:S1874z"3Remove this use of "createQuery"; it is deprecated.(¹ƒã¿ûÿÿÿÿ8—£‡Äü1J$e6d10513-c22f-42d9-8042-1de474ee3c6f
+w
+java:S1874"3Remove this use of "createQuery"; it is deprecated.(ı²“8˜£‡Äü1J$99e3ae0f-36a9-428c-99f4-52824ffa789d
+Š
+java:S1989"AHandle the "ServletException" thrown here in a "try/catch" block.(ŞÕ‡øÿÿÿÿ8™£‡Äü1J$3f6d87ad-c1a9-409f-a8c6-b1e4886850bd
