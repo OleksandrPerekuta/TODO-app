@@ -29,6 +29,24 @@
       border-radius: 4px;
       background-color: #fff;
       cursor: move;
+      position: relative;
+    }
+    .task h3 {
+      margin: 0 0 10px;
+    }
+    .task p {
+      margin: 0 0 10px;
+    }
+    .deleteButton {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
     }
     .column h2 {
       text-align: center;
@@ -45,6 +63,52 @@
     }
     body {
       margin-top: 20px;
+    }
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 4px;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
@@ -64,15 +128,90 @@
           <div class="task" data-id="${task.id}">
             <h3>${task.name}</h3>
             <p>${task.description}</p>
+            <button class="deleteButton" data-id="${task.id}">Delete</button>
           </div>
         </c:forEach>
       </div>
     </div>
   </c:forEach>
 </div>
+
+<!-- The Modal -->
+<div id="taskModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Add New Task</h2>
+    <div class="form-group">
+      <label for="taskName">Task Name</label>
+      <input type="text" id="taskName" name="taskName">
+    </div>
+    <div class="form-group">
+      <label for="taskDescription">Task Description</label>
+      <input type="text" id="taskDescription" name="taskDescription">
+    </div>
+    <div class="form-group">
+      <label for="taskStatus">Status</label>
+      <select id="taskStatus" name="taskStatus">
+        <option value="to-do">to-do</option>
+        <option value="in-progress">in-progress</option>
+        <option value="done">done</option>
+      </select>
+    </div>
+    <button id="saveTaskButton">Save Task</button>
+  </div>
+</div>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const columns = document.querySelectorAll('.column');
+    const addButton = document.querySelector('.addButton');
+    const modal = document.getElementById('taskModal');
+    const closeModal = document.querySelector('.close');
+    const saveTaskButton = document.getElementById('saveTaskButton');
+
+    addButton.addEventListener('click', function() {
+      modal.style.display = 'block';
+    });
+
+    closeModal.addEventListener('click', function() {
+      modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+
+    saveTaskButton.addEventListener('click', function() {
+      const taskName = document.getElementById('taskName').value;
+      const taskDescription = document.getElementById('taskDescription').value;
+      const taskStatus = document.getElementById('taskStatus').value;
+
+      const body = new URLSearchParams({
+        name: taskName,
+        description: taskDescription,
+        status: taskStatus
+      });
+
+      fetch('http://localhost:8080/?'+'name='+taskName+'&description='+taskDescription+'&status'+taskStatus, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: body
+      })
+              .then(response => {
+                if (response.ok) {
+                  console.log('Task added successfully');
+                  location.reload();
+                } else {
+                  console.error('Error adding task');
+                }
+              })
+              .catch(error => console.error('Error:', error));
+
+      modal.style.display = 'none';
+    });
 
     columns.forEach(column => {
       new Sortable(column.querySelector('.tasks'), {
@@ -83,7 +222,9 @@
           let taskId = evt.item.getAttribute('data-id');
           let newLabel = evt.to.closest('.column').getAttribute('id');
           let newPosition = Array.from(evt.to.children).indexOf(evt.item);
-          let body = 'id=' + taskId + '&label=' + newLabel + '&position=' + newPosition;
+          let oldLabel = evt.from.closest('.column').getAttribute('id');
+          let body = 'id=' + taskId + '&label=' + newLabel + '&position=' + newPosition + '&oldLabel=' +oldLabel;
+
           fetch('http://localhost:8080/?' + body, {
             method: 'PUT',
             headers: {
@@ -100,6 +241,27 @@
                   })
                   .catch(error => console.error('Error:', error));
         }
+      });
+    });
+
+    document.querySelectorAll('.deleteButton').forEach(button => {
+      button.addEventListener('click', function() {
+        const taskId = this.getAttribute('data-id');
+        fetch('http://localhost:8080/?id=' + taskId, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        })
+                .then(response => {
+                  if (response.ok) {
+                    console.log('Task deleted successfully');
+                    this.parentElement.remove();
+                  } else {
+                    console.error('Error deleting task');
+                  }
+                })
+                .catch(error => console.error('Error:', error));
       });
     });
   });

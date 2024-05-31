@@ -56,7 +56,7 @@ public class TaskViewServlet extends HttpServlet {
             transaction = session.beginTransaction();
 
             String hqlUpdate = "UPDATE Task SET position = position + 1 WHERE status = :status";
-            int updatedEntities = session.createQuery(hqlUpdate)
+            session.createQuery(hqlUpdate)
                     .setParameter("status", status)
                     .executeUpdate();
 
@@ -76,8 +76,6 @@ public class TaskViewServlet extends HttpServlet {
         response.getWriter().println("Task added successfully!");
     }
 
-
-
     private boolean isCorrect(String task) {
         return task.equals("to-do") || task.equals("in-progress") || task.equals("done");
     }
@@ -85,18 +83,16 @@ public class TaskViewServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
-        String label = req.getParameter("label");
-        String position = req.getParameter("position");
+        String newLabel = req.getParameter("label");
+        String newPositionStr = req.getParameter("position");
+        String oldLabel = req.getParameter("oldLabel");
 
-        if (id == null || label == null || position == null || id.isEmpty() || label.isEmpty() || position.isEmpty()) {
-            boolean isIdEmpty = id == null || id.isEmpty();
-            boolean isLabelEmpty = label == null || label.isEmpty();
-            boolean isPositionEmpty = position == null || position.isEmpty();
-            throw new ServletException("Parameters must not be null or empty. isIdEmpty= " + isIdEmpty + ", isLabelEmpty= " + isLabelEmpty + ", isPositionEmpty= " + isPositionEmpty);
+        if (id == null || newLabel == null || newPositionStr == null || oldLabel == null || id.isEmpty() || newLabel.isEmpty() || newPositionStr.isEmpty() || oldLabel.isEmpty()) {
+            throw new ServletException("Parameters must not be null or empty.");
         }
 
         Long taskId = Long.parseLong(id);
-        Long newPosition = Long.parseLong(position);
+        Long newPosition = Long.parseLong(newPositionStr);
 
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -110,24 +106,22 @@ public class TaskViewServlet extends HttpServlet {
             if (currentPosition == null) {
                 throw new ServletException("Task not found");
             }
-            if (newPosition < currentPosition) {
-                String hqlUpdatePositions = "UPDATE Task t SET t.position = t.position + 1 WHERE t.status = :label AND t.position >= :newPosition AND t.position < :currentPosition";
-                session.createQuery(hqlUpdatePositions)
-                        .setParameter("label", label)
-                        .setParameter("newPosition", newPosition)
-                        .setParameter("currentPosition", currentPosition)
-                        .executeUpdate();
-            } else if (newPosition > currentPosition) {
-                String hqlUpdatePositions = "UPDATE Task t SET t.position = t.position - 1 WHERE t.status = :label AND t.position <= :newPosition AND t.position > :currentPosition";
-                session.createQuery(hqlUpdatePositions)
-                        .setParameter("label", label)
-                        .setParameter("newPosition", newPosition)
-                        .setParameter("currentPosition", currentPosition)
-                        .executeUpdate();
-            }
-            String hqlUpdateTask = "UPDATE Task t SET t.status = :label, t.position = :newPosition WHERE t.id = :id";
+
+            String hqlUpdateOldColumn = "UPDATE Task t SET t.position = t.position - 1 WHERE t.status = :oldLabel AND t.position > :currentPosition";
+            session.createQuery(hqlUpdateOldColumn)
+                    .setParameter("oldLabel", oldLabel)
+                    .setParameter("currentPosition", currentPosition)
+                    .executeUpdate();
+
+            String hqlUpdateNewColumn = "UPDATE Task t SET t.position = t.position + 1 WHERE t.status = :newLabel AND t.position >= :newPosition";
+            session.createQuery(hqlUpdateNewColumn)
+                    .setParameter("newLabel", newLabel)
+                    .setParameter("newPosition", newPosition)
+                    .executeUpdate();
+
+            String hqlUpdateTask = "UPDATE Task t SET t.status = :newLabel, t.position = :newPosition WHERE t.id = :id";
             session.createQuery(hqlUpdateTask)
-                    .setParameter("label", label)
+                    .setParameter("newLabel", newLabel)
                     .setParameter("newPosition", newPosition)
                     .setParameter("id", taskId)
                     .executeUpdate();
@@ -142,6 +136,49 @@ public class TaskViewServlet extends HttpServlet {
         }
     }
 
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String id = req.getParameter("id");
+        if (id == null || id.isEmpty()) {
+            throw new ServletException("Id must not be null or empty");
+        }
 
+        Long taskId = Long.parseLong(id);
 
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            String hqlSelect = "SELECT t.status, t.position FROM Task t WHERE t.id = :id";
+            Object[] result = (Object[]) session.createQuery(hqlSelect)
+                    .setParameter("id", taskId)
+                    .uniqueResult();
+
+            if (result == null) {
+                throw new ServletException("Task not found");
+            }
+
+            String status = (String) result[0];
+            Long position = (Long) result[1];
+
+            String hqlDelete = "DELETE FROM Task t WHERE t.id = :id";
+            session.createQuery(hqlDelete)
+                    .setParameter("id", taskId)
+                    .executeUpdate();
+
+            String hqlUpdatePositions = "UPDATE Task t SET t.position = t.position - 1 WHERE t.status = :status AND t.position > :position";
+            session.createQuery(hqlUpdatePositions)
+                    .setParameter("status", status)
+                    .setParameter("position", position)
+                    .executeUpdate();
+
+            transaction.commit();
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new ServletException(e.getMessage());
+        }
+    }
 }
