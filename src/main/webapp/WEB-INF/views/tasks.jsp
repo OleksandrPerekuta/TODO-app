@@ -12,30 +12,37 @@
       margin-bottom: 60px;
     }
     .board {
+      background-color: #344C64;
       display: flex;
       justify-content: space-between;
+      height: calc(100vh - 80px);
     }
     .column {
       width: 30%;
       padding: 10px;
-      border: 1px solid #ccc;
+      border: 1px solid #577B8D;
       border-radius: 4px;
-      background-color: #f9f9f9;
+      background-color: #577B8D;
     }
     .task {
       margin-bottom: 10px;
       padding: 10px;
-      border: 1px solid #ccc;
+      border: 1px solid #57A6A1;
       border-radius: 4px;
-      background-color: #fff;
+      background-color: #57A6A1;
       cursor: move;
       position: relative;
+      word-wrap: break-word;
     }
     .task h3 {
       margin: 0 0 10px;
     }
     .task p {
       margin: 0 0 10px;
+    }
+    .tasks {
+      flex-grow: 1;
+      overflow-y: auto;
     }
     .deleteButton {
       position: absolute;
@@ -62,9 +69,9 @@
       margin-right: 40px;
     }
     body {
+      background-color: #240750;
       margin-top: 20px;
     }
-    /* Modal styles */
     .modal {
       display: none;
       position: fixed;
@@ -152,9 +159,9 @@
     <div class="form-group">
       <label for="taskStatus">Status</label>
       <select id="taskStatus" name="taskStatus">
-        <option value="to-do">to-do</option>
-        <option value="in-progress">in-progress</option>
-        <option value="done">done</option>
+        <option value="to-do">To do</option>
+        <option value="in-progress">In progress</option>
+        <option value="done">Done</option>
       </select>
     </div>
     <button id="saveTaskButton">Save Task</button>
