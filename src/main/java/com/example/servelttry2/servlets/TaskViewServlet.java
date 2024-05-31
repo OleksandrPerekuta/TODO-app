@@ -21,7 +21,7 @@ public class TaskViewServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Map<String, List<Task>> tasksByLabel = new LinkedHashMap<>();
-        for (String label : new String[]{"to-do", "in-progress", "done"}) {
+        for (String label : new String[]{"To do", "In progress", "Done"}) {
             List<Task> tasks;
             try (Session session = HibernateUtil.getSessionFactory().openSession()) {
                 String hql = "FROM Task WHERE status = :label order by position";
@@ -77,7 +77,7 @@ public class TaskViewServlet extends HttpServlet {
     }
 
     private boolean isCorrect(String task) {
-        return task.equals("to-do") || task.equals("in-progress") || task.equals("done");
+        return task.equals("To do") || task.equals("In progress") || task.equals("Done");
     }
 
     @Override

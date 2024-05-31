@@ -13,6 +13,8 @@
     }
     .board {
       background-color: #344C64;
+      240750
+      color: black;
       display: flex;
       justify-content: space-between;
       height: calc(100vh - 80px);
@@ -59,7 +61,7 @@
       text-align: center;
     }
     .addButton {
-      background-color: blue;
+      background-color: #344C64;
       color: white;
       border: none;
       padding: 20px 40px;
@@ -69,6 +71,7 @@
       margin-right: 40px;
     }
     body {
+      color: white;
       background-color: #240750;
       margin-top: 20px;
     }
@@ -84,7 +87,8 @@
       background-color: rgba(0, 0, 0, 0.4);
     }
     .modal-content {
-      background-color: #fefefe;
+      background-color:#240750;
+      color: white;
       margin: 15% auto;
       padding: 20px;
       border: 1px solid #888;
@@ -149,22 +153,22 @@
     <span class="close">&times;</span>
     <h2>Add New Task</h2>
     <div class="form-group">
-      <label for="taskName">Task Name</label>
+      <label for="taskName">Name</label>
       <input type="text" id="taskName" name="taskName">
     </div>
     <div class="form-group">
-      <label for="taskDescription">Task Description</label>
+      <label for="taskDescription">Description</label>
       <input type="text" id="taskDescription" name="taskDescription">
     </div>
     <div class="form-group">
       <label for="taskStatus">Status</label>
       <select id="taskStatus" name="taskStatus">
-        <option value="to-do">To do</option>
-        <option value="in-progress">In progress</option>
-        <option value="done">Done</option>
+        <option value="To do">To do</option>
+        <option value="In progress">In progress</option>
+        <option value="Done">Done</option>
       </select>
     </div>
-    <button id="saveTaskButton">Save Task</button>
+    <button id="saveTaskButton">Save</button>
   </div>
 </div>
 <script>
